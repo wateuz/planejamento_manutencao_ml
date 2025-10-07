@@ -17,16 +17,18 @@ class LeituraSensor(Base):
 
     # Colunas da tabela
     id = Column(Integer, primary_key=True, autoincrement=True)
+    tag = Column(String, nullable=False) # Identificador do sensor
+    description = Column(String, nullable=True) # Descrição adicional (opcional)
     timestamp = Column(DateTime, nullable=False, default=None)
-    value_pv = Column(Float, nullable=False) # Process variable
-    value_sp = Column(Float, nullable=False) # Setpoint
-    value_mv = Column(Float, nullable=False) # Manipulated variable
+    value = Column(Float, nullable=False) # Process variable
+    #value_sp = Column(Float, nullable=False) # Setpoint
+    #value_mv = Column(Float, nullable=False) # Manipulated variable
     
     
     def __repr__(self):
         """Representação em string do objeto, útil para debug."""
-        return (f"<LeituraSensor(id={self.id}, timestamp='{self.timestamp}', "
-            f"value_pv={self.value_pv}, value_sp={self.value_sp}, value_mv={self.value_mv})>")
+        return (f"<LeituraSensor(tag='{self.tag}', id={self.id}, timestamp='{self.timestamp}', value={self.value}), description='{self.description}'>")
+            #f"value_pv={self.value_pv}, value_sp={self.value_sp}, value_mv={self.value_mv})>")
     
 Base.metadata.create_all(engine)
 
