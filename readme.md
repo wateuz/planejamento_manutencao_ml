@@ -19,7 +19,7 @@ PMML é um projeto voltado para o desenvolvimento de modelos preditivos de falha
 > O banco de dados <b style="color: green">dados_sensores.db</b> contém toda a parte dos dados estruturados e semi-estruturado.
 
 - **archives main**
-> O <b style="color: blue">main_nb.ipynb</b> é o arquivo de debug do projeto.
+> O <b style="color: blue">main.ipynb</b> é o arquivo de debug do projeto.
 
 
 ## How to use
