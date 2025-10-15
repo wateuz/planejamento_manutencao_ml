@@ -1,5 +1,7 @@
-import datetime
-from sqlalchemy import create_engine, Column, Integer, Float, DateTime, String
+from typing import List, Optional
+from datetime import datetime
+from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker
 DATABASE_FILE = "dados_sensores.db"
 engine = create_engine(f'sqlite:///{DATABASE_FILE}')
@@ -9,6 +11,15 @@ Base = declarative_base()
 #DEFINIÇÃO DA MODEL ORM
 # -----------------------------------------------------------------------------
 
+class Sensores(Base):
+    __tablename__ = 'sensores' # Nome da tabela no banco de dados
+    id = Column(Integer, primary_key=True, autoincrement=True) # <-- ADICIONEI primary_key=True
+    description = Column(String, nullable=True)
+    tag = Column(String, nullable=False, unique=True)
+    
+    # Define a coleção de leituras que este sensor possui
+    # O back_populates aponta para o atributo 'sensor' na classe LeituraSensor
+    leituras = relationship("LeituraSensor", back_populates="sensor", cascade="all, delete-orphan") # <-- RELACIONAMENTO (lado "um")
 class LeituraSensor(Base):
     """
     Representa uma única leitura de um sensor em um determinado momento.
@@ -17,19 +28,27 @@ class LeituraSensor(Base):
 
     # Colunas da tabela
     id = Column(Integer, primary_key=True, autoincrement=True)
-    tag = Column(String, nullable=False) # Identificador do sensor
-    description = Column(String, nullable=True) # Descrição adicional (opcional)
-    timestamp = Column(DateTime, nullable=False, default=None)
-    value = Column(Float, nullable=False) # Process variable
-    #value_sp = Column(Float, nullable=False) # Setpoint
-    #value_mv = Column(Float, nullable=False) # Manipulated variable
+    
+    # Esta é a Chave Estrangeira que liga esta leitura a um sensor específico.
+    # 'sensores.id' refere-se à tabela 'sensores' e à coluna 'id'.
+    id_sensor = Column(Integer, ForeignKey('sensores.id'), nullable=False) # <-- CHAVE ESTRANGEIRA
+    
+    timestamp = Column(DateTime, nullable=False)
+    value = Column(Float, nullable=False)
+    
+    # Define o relacionamento de volta para a classe Sensores
+    # O back_populates aponta para o atributo 'leituras' na classe Sensores
+    sensor = relationship("Sensores", back_populates="leituras") # <-- RELACIONAMENTO (lado "muitos")
     
     
     def __repr__(self):
         """Representação em string do objeto, útil para debug."""
-        return (f"<LeituraSensor(tag='{self.tag}', id={self.id}, timestamp='{self.timestamp}', value={self.value}), description='{self.description}'>")
+        return (f"<LeituraSensor(id={self.id}, tag_id='{self.tag_id}', timestamp='{self.timestamp}', value={self.value})>")
             #f"value_pv={self.value_pv}, value_sp={self.value_sp}, value_mv={self.value_mv})>")
-    
+
+
+
+
 Base.metadata.create_all(engine)
 
 #Exemplo de Como Usar o Modelo
