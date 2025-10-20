@@ -43,7 +43,7 @@ class LeituraSensor(Base):
     
     def __repr__(self):
         """Representação em string do objeto, útil para debug."""
-        return (f"<LeituraSensor(id={self.id}, tag_id='{self.tag_id}', timestamp='{self.timestamp}', value={self.value})>")
+        return (f"<LeituraSensor(id={self.id}, tag_id='{self.id_sensor}', timestamp='{self.timestamp}', value={self.value})>")
             #f"value_pv={self.value_pv}, value_sp={self.value_sp}, value_mv={self.value_mv})>")
 
 
