@@ -34,4 +34,9 @@ python -m venv venv
 # Instala as dependencias do projeto
 pip install -r requirements.txt
 ```
-Ainda será avaliado como será realizada a execução.
+No arquivo *standardize.py* ao final da execução o algoritmo executa:
+
+```bash
+130 line| df_imputed.to_csv("leituras_padronizadas_imputed.xlsx", index=True)
+```
+Pode ser alterada para outra forma de salvamento. Basta alterar no final do arquivo o tipo de salvamento do dataframe "df_imputed".

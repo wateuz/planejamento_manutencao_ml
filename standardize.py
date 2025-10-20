@@ -104,8 +104,27 @@ df_pivot = df.pivot_table(
     aggfunc=AGREGAÇÃO          # Como lidar com duplicatas
 )
 print(df_pivot)
-df_pivot.to_excel("leituras_padronizadas_pivot.xlsx", index=False)
-#agora = datetime.datetime.now()
-#print(agora - timedelta(hours=3))
-#threshold_minutes = 5
-#print(timedelta(minutes=threshold_minutes))
+#df_pivot.to_excel("leituras_padronizadas_pivot.xlsx", index=False)
+
+# preencher NaNs quando existirem valores em index-1 e index+1
+df_imputed = df_pivot.copy()
+
+# trabalhar só nas colunas numéricas (seguro se tiver colunas não numéricas)
+num_cols = df_imputed.select_dtypes(include=["number"]).columns
+
+prev = df_imputed[num_cols].shift(1)
+nxt  = df_imputed[num_cols].shift(-1)
+
+mask = df_imputed[num_cols].isna() & prev.notna() & nxt.notna()
+df_imputed[num_cols] = df_imputed[num_cols].where(~mask, (prev + nxt) / 2)
+
+# opcional: ver quantos valores foram preenchidos
+print("Valores preenchidos:", mask.sum().sum())
+
+# usar df_imputed adiante
+df_imputed.head(100)
+
+# preenchimento linear para quaisquer NaNs restantes
+df_imputed = df_pivot.interpolate(method='linear')
+
+df_imputed.to_csv("leituras_padronizadas_imputed.xlsx", index=True)
