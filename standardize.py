@@ -127,4 +127,31 @@ df_imputed.head(100)
 # preenchimento linear para quaisquer NaNs restantes
 df_imputed = df_pivot.interpolate(method='linear')
 
-df_imputed.to_csv("leituras_padronizadas_imputed.xlsx", index=True)
+
+#como trasformar o index em coluna normal
+df_imputed.index = pd.to_datetime(df_imputed.index)
+df_imputed.sort_index(inplace=True)
+
+df_nota_ordem = pd.read_excel('2_Verificacao_de_ordens_de_manutencao_p_local_instalacao.xlsx')
+df_nota_ordem = df_nota_ordem[['DATA_INICIO_REAL', 'DATA_FIM_REAL','DATA_BASE_INICIO','DATA_BASE_FIM','CAMPO_SELECAO', 'TEXTO_BREVE' ]][(df_nota_ordem['LOCAL_INSTALACAO'] == 'AGH2.RFV.AMVAG.PR___.PV2311020') & (~df_nota_ordem['DATA_INICIO_REAL'].isna()) ].sort_values(by='DATA_INICIO_REAL')
+
+# garantir colunas datetime na tabela de ordens
+df_nota_ordem['DATA_INICIO_REAL'] = pd.to_datetime(df_nota_ordem['DATA_INICIO_REAL'])
+df_nota_ordem['DATA_FIM_REAL'] = pd.to_datetime(df_nota_ordem['DATA_FIM_REAL'])
+
+for index, row in df_nota_ordem.iterrows():
+    print(row['DATA_INICIO_REAL'], row['DATA_FIM_REAL'])
+    data_inicio = row['DATA_INICIO_REAL'].normalize()
+    data_fim = row['DATA_FIM_REAL'].normalize()
+    print(data_inicio, data_fim)
+    
+    # Cria a MÁSCARA corrigida
+    mask_manutencao = (df_imputed.index >= data_inicio) & (df_imputed.index < data_fim)
+    
+    # Atribuição Vetorizada (Marca 'target' como 1 para o período)
+    df_imputed.loc[mask_manutencao, 'target'] = 1
+
+df_imputed['target'] = df_imputed['target'].fillna(0)
+df_imputed.to_csv("leituras_padronizadas_imputed.csv", index=True)
+
+print(df_imputed.info())

@@ -1,6 +1,7 @@
 # manualmente adicionado
 main.ipynb
-*.xlsx 
+*.xlsx
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

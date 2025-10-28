@@ -18,8 +18,9 @@ PMML é um projeto voltado para o desenvolvimento de modelos preditivos de falha
 - **data collection**
 > O banco de dados <b style="color: green">dados_sensores.db</b> contém toda a parte dos dados estruturados e semi-estruturado.
 
-- **archives main**
-> O <b style="color: blue">main.ipynb</b> é o arquivo de debug do projeto.
+- **archives**
+> O <b style="color: blue">main.py</b> é o arquivo para aquisição dos dados.
+> <b style="color: blue">standardize.py</b> é responsável por normalizar os dados armazenados no <b style="color: orange"> dados_sensores.db</b>.
 
 
 ## How to use
@@ -37,6 +38,6 @@ pip install -r requirements.txt
 No arquivo *standardize.py* ao final da execução o algoritmo executa:
 
 ```bash
-130 line| df_imputed.to_csv("leituras_padronizadas_imputed.xlsx", index=True)
+155 line| df_imputed.to_csv("leituras_padronizadas_imputed.csv", index=True)
 ```
-Pode ser alterada para outra forma de salvamento. Basta alterar no final do arquivo o tipo de salvamento do dataframe "df_imputed".
+**OBS**: Pode ser alterada para outra forma de salvamento. Basta alterar ao final do arquivo o tipo de salvamento do dataframe *"df_imputed"*.
