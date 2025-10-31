@@ -93,7 +93,7 @@ for index, row in df_points_filtrado.iterrows():
 
 # --- Parâmetros de execução ---
 client = PIWebApiClient("https://piwebapicorp.petrobras.com.br/piwebapi/", useKerberos=True, verifySsl=False)
-tag_refined = "22311020"
+tag_refined = "DJ-231501-6B"
 pi_server_name = "S2950PIS"
 prefixos = ['FI_', 'PIC_', 'PT', 'TI_', 'LT_', 'PI_'] # Seus prefixos para ignorar
 
@@ -115,7 +115,7 @@ Base.metadata.create_all(engine) # Garante que as tabelas existam
 df_sensores_pi = get_tags(client, tag_refined, pi_server_name, prefixos)
 print(f"Encontrados {len(df_sensores_pi)} sensores no PI System.")
 
-if not df_sensores_pi.empty and False:
+if not df_sensores_pi.empty:
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -185,7 +185,7 @@ for index, row in df_points_filtrado.iterrows():
         print(f"Buscando dados para o tag: {tag_name}...")
         df_values = client.data.get_plot_values(
             f"pi:\\\\{pi_server_name}\\{tag_name}",
-            end_time="*", intervals=30000, start_time="*-10y"
+            end_time="*", intervals=30000, start_time="*-2y"
         )
         
         if df_values.empty:
