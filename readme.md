@@ -34,10 +34,16 @@ python -m venv venv
 .\venv\scripts\activate
 # Instala as dependencias do projeto
 pip install -r requirements.txt
+
 ```
+#### standardize.py
 No arquivo *standardize.py* ao final da execução o algoritmo executa:
 
 ```bash
 155 line| df_imputed.to_csv("leituras_padronizadas_imputed.csv", index=True)
 ```
 **OBS**: Pode ser alterada para outra forma de salvamento. Basta alterar ao final do arquivo o tipo de salvamento do dataframe *"df_imputed"*.
+
+
+#### modelo.py
+No arquivo *modelo.py* está a segunda etapa, modelagem. Para facilidade, este repositório possui o CSV gerado para treino, disponibilizado para realizar testes diretamente neste arquivo, possibilitando executar diretamente (instalando todas dependencias) e pular a etapa do arquivo *standardize.py*.
